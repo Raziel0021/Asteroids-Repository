@@ -22,11 +22,15 @@
     <ClCompile Include="..\src\Game\GameManager.cpp" />
     <ClCompile Include="..\src\Game\GamePlay.cpp" />
     <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\Screens\Credits.cpp" />
+    <ClCompile Include="..\src\Screens\GameOver.cpp" />
     <ClCompile Include="..\src\Screens\MainMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Game\GameManager.h" />
     <ClInclude Include="..\src\Game\GamePlay.h" />
+    <ClInclude Include="..\src\Screens\Credits.h" />
+    <ClInclude Include="..\src\Screens\GameOver.h" />
     <ClInclude Include="..\src\Screens\MainMenu.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

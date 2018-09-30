@@ -19,6 +19,12 @@
       <Filter>Screens</Filter>
     </ClCompile>
     <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\Screens\Credits.cpp">
+      <Filter>Screens</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Screens\GameOver.cpp">
+      <Filter>Screens</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Game\GameManager.h">
@@ -28,6 +34,12 @@
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Screens\MainMenu.h">
+      <Filter>Screens</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Screens\Credits.h">
+      <Filter>Screens</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Screens\GameOver.h">
       <Filter>Screens</Filter>
     </ClInclude>
   </ItemGroup>

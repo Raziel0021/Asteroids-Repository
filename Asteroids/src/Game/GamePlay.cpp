@@ -2,9 +2,10 @@
 
 #include <raylib.h>
 #include <cmath>
-#include <math.h>
 
 #include "GameManager.h"
+#include "Screens/MainMenu.h"
+
 using namespace Game;
 namespace Game {
 	namespace GamePlay {
@@ -90,16 +91,17 @@ namespace Game {
 		static const float SHOOT_MAX_LIFETIME = 0.1f;
 		static const short LIM_RANGE = 150;
 		static const float SHIPHEIGHT_DIVIDER = 2.5f;
-		static const short SHIP_COLLIDER_Z = 12;
+		static const short SHIP_COLLIDER_Z = 10;
 		static const short PAIR_DIVIDER = 2;
 
 		static const float ALPHA_DEACTIVATE_METEOR = 0.3f;
 		void InitGame() 
 		{
+			MainMenu::menu = true;
 			correctRange = false;
 			victory = false;
 			pause = false;
-
+			gameover = false;
 			shipHeight = (HALF_PLAYER_BASE_SIZE) / tanf(20 * DEG2RAD);
 
 			//Init Player
@@ -307,7 +309,7 @@ namespace Game {
 			
 				for (int m = 0; m < MAX_BIG_METEORS; m++)
 				{
-					if (CheckCollisionCircles({ player.collider.x,player.collider.y }, player.collider.z, bigMeteor[m].position, bigMeteor[m].radius) && bigMeteor[m].active)
+					if (CheckCollisionCircles({ player.collider.x , player.collider.y }, player.collider.z, bigMeteor[m].position, bigMeteor[m].radius) && bigMeteor[m].active)
 						gameover = true;
 				}
 				for (int m = 0; m < MAX_MEDIUM_METEORS; m++)
@@ -486,21 +488,21 @@ namespace Game {
 				if (bigMeteor[i].active)
 					DrawCircleV(bigMeteor[i].position, bigMeteor[i].radius, WHITE);
 				else
-					DrawCircleV(bigMeteor[i].position, bigMeteor[i].radius, Fade(LIGHTGRAY, ALPHA_DEACTIVATE_METEOR));
+					DrawCircleV(bigMeteor[i].position, bigMeteor[i].radius, Fade(BLANK, ALPHA_DEACTIVATE_METEOR));
 			}
 			for (int i = 0; i < MAX_MEDIUM_METEORS; i++)
 			{
 				if (mediumMeteor[i].active)
 					DrawCircleV(mediumMeteor[i].position, mediumMeteor[i].radius, WHITE);
 				else
-					DrawCircleV(mediumMeteor[i].position, mediumMeteor[i].radius, Fade(LIGHTGRAY, ALPHA_DEACTIVATE_METEOR));
+					DrawCircleV(mediumMeteor[i].position, mediumMeteor[i].radius, Fade(BLANK, ALPHA_DEACTIVATE_METEOR));
 			}
 			for (int i = 0; i < MAX_SMALL_METEORS; i++)
 			{
 				if (smallMeteor[i].active)
 					DrawCircleV(smallMeteor[i].position, smallMeteor[i].radius, WHITE);
 				else
-					DrawCircleV(smallMeteor[i].position, smallMeteor[i].radius, Fade(LIGHTGRAY, ALPHA_DEACTIVATE_METEOR));
+					DrawCircleV(smallMeteor[i].position, smallMeteor[i].radius, Fade(BLANK, ALPHA_DEACTIVATE_METEOR));
 			}
 
 			//Shoot

@@ -5,6 +5,8 @@ namespace Game
 {
 	extern const int SCREENWIDTH;
 	extern const int SCREENHEIGHT;
+ 	extern const float HALF_SCREENHEIGHT ;
+	extern const float HALF_SCREENWIDTH;
 	namespace GameManager
 	{
 		void Run();
