@@ -19,3 +19,6 @@ Release
 [Bb]in/
 [Oo]bj/
 .vs
+
+#ignore
+.vs\asteroids\v15\!.suo
