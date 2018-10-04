@@ -56,15 +56,15 @@ namespace Game
 		{
 			// Initialization
 			InitWindow(SCREENWIDTH, SCREENHEIGHT, "Asteroids");
-			//SetExitKey(0);
+			SetExitKey(0);
 			
 			//#define AUDIO
 
 			#ifdef AUDIO	
 			InitAudioDevice();
-			ping = LoadSound("res/ping.ogg");
-			pong = LoadSound("res/pong.wav");
-			music = LoadMusicStream("res/michorvath.ogg");
+			ping = LoadSound("res/");
+			pong = LoadSound("res/");
+			music = LoadMusicStream("res/");
 			PlayMusicStream(music);
 			#endif // AUDIO
 		}
