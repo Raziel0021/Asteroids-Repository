@@ -1,0 +1,24 @@
+# gitignore for C++
+# Compiled Object files
+*.slo
+*.lo
+*.o
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# Visual Studio Files
+Debug
+Release
+[Bb]in/
+[Oo]bj/
+.vs
+
+#ignore
+.vs\asteroids\v15\!.suo
