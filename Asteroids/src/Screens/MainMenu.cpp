@@ -23,9 +23,9 @@ namespace Game {
 		{
 			DrawText(FormatText("ASTEROIDS"), Game::HALF_SCREENWIDTH - (MeasureText("ASTEROIDS", FONT_SIZE_TITLE) / DIVIDER_MEASURE_TEXT), Game::SCREENHEIGHT / GAMETITLE_LINE_DIVIDER, FONT_SIZE_TITLE, GREEN);
 			DrawText(FormatText("Press Enter to Play"), Game::HALF_SCREENWIDTH - (MeasureText("Press Enter to Play", FONT_SIZE_OPTIONS) / DIVIDER_MEASURE_TEXT), Game::SCREENHEIGHT / OPTIONS_LINE_DIVIDER, FONT_SIZE_OPTIONS, DARKGRAY);
-			DrawText(FormatText("2.Credits"), Game::HALF_SCREENWIDTH - (MeasureText("2.Credits", FONT_SIZE_OPTIONS) / DIVIDER_MEASURE_TEXT), Game::SCREENHEIGHT / OPTIONS_LINE_DIVIDER + FONT_SIZE_OPTIONS , FONT_SIZE_OPTIONS, DARKGRAY);
+			DrawText(FormatText("Press C Credits"), Game::HALF_SCREENWIDTH - (MeasureText("Press C Credits", FONT_SIZE_OPTIONS) / DIVIDER_MEASURE_TEXT), Game::SCREENHEIGHT / OPTIONS_LINE_DIVIDER + FONT_SIZE_OPTIONS , FONT_SIZE_OPTIONS, DARKGRAY);
 			DrawText(FormatText("Press Esc to Exit"), Game::HALF_SCREENWIDTH - (MeasureText("Press Esc to exit", FONT_SIZE_OPTIONS) / DIVIDER_MEASURE_TEXT), Game::SCREENHEIGHT / OPTIONS_LINE_DIVIDER + (FONT_SIZE_OPTIONS * 2), FONT_SIZE_OPTIONS, DARKGRAY);
-			DrawText(FormatText("Version 0.01"), Game::HALF_SCREENWIDTH - (MeasureText("Version 0.01", FONT_SIZE_VERSION) / DIVIDER_MEASURE_TEXT), Game::SCREENHEIGHT / VERSION_LINE_DIVIDER + FONT_SIZE_OPTIONS, FONT_SIZE_VERSION, DARKGRAY);
+			DrawText(FormatText("Version 0.2"), Game::HALF_SCREENWIDTH - (MeasureText("Version 0.2", FONT_SIZE_VERSION) / DIVIDER_MEASURE_TEXT), Game::SCREENHEIGHT / VERSION_LINE_DIVIDER + FONT_SIZE_OPTIONS, FONT_SIZE_VERSION, DARKGRAY);
 			UpdateMenu();
 		}
 		void UpdateMenu()
@@ -34,7 +34,7 @@ namespace Game {
 			{
 				menu = false;
 			}
-			if (IsKeyPressed(KEY_TWO))
+			if (IsKeyPressed(KEY_C))
 			{
 				menu = false;
 				Credits::credits = true;

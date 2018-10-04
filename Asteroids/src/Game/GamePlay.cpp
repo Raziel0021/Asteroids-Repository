@@ -416,7 +416,7 @@ namespace Game {
 									mediumMeteor[midMeteorsCount].active = true;
 									midMeteorsCount++;
 								}
-								//bigmeteor[a].position;
+								
 								bigMeteor[a].color = RED;
 								a = MAX_BIG_METEORS;
 							}
@@ -446,7 +446,7 @@ namespace Game {
 									smallMeteor[smallMeteorsCount].active = true;
 									smallMeteorsCount++;
 								}
-								//mediumMeteor[b].position;
+								
 								mediumMeteor[b].color = GREEN;
 								b = MAX_MEDIUM_METEORS;
 							}
@@ -512,7 +512,6 @@ namespace Game {
 					DrawCircleV(shoot[i].position, shoot[i].radius, WHITE);
 			}
 
-			
 
 		}
 	}
