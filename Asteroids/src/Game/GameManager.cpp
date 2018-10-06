@@ -58,6 +58,8 @@ namespace Game
 			InitWindow(SCREENWIDTH, SCREENHEIGHT, "Asteroids");
 			SetExitKey(0);
 			
+			GamePlay::rocket = LoadTexture("res/CohetePequeño.png");
+			GamePlay::asteroid = LoadTexture("res/AsteroidePequeño.png");
 			//#define AUDIO
 
 			#ifdef AUDIO	
@@ -70,6 +72,7 @@ namespace Game
 		}
 		void UnloadGame()
 		{
+			UnloadTexture (GamePlay::rocket);
 			CloseAudioDevice();
 			CloseWindow();
 			// TODO: Unload all dynamic loaded data (textures, sounds, models...)
