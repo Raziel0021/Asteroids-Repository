@@ -5,6 +5,7 @@ namespace Game {
 	namespace MainMenu
 	{
 		extern bool menu;
+		void initMenuButtons();
 		void showMenu();
 		void UpdateMenu();
 	}

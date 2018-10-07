@@ -558,7 +558,6 @@ namespace Game {
 					DrawCircleV(shoot[i].position, shoot[i].radius, WHITE);
 			}
 
-
 		}
 	}
 }

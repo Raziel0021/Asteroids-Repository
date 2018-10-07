@@ -4,6 +4,7 @@ namespace Game {
 	namespace Credits
 	{
 		extern bool credits;
+		void initCreditsButtons();
 		void showCredits();
 		void updateCredits();
 	}

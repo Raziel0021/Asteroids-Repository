@@ -20,8 +20,24 @@ namespace Game {
 		static const int LINE_DIVIDER = 4;
 		static const int DIVIDER_MEASURE_TEXT = 2;
 		bool credits;
+
+		static Vector2 mousePoint;
+		static Rectangle backButton;
+		static const float MULTIPLIER_BUTTON_WIDTH = 1.15f;
+		static const float SPACE_BETWEEN_LINES = 1.3f;
+
+		void initCreditsButtons()
+		{
+			backButton = { (float)Game::HALF_SCREENWIDTH - (MeasureText("Back", FONT_SIZE)* MULTIPLIER_BUTTON_WIDTH / DIVIDER_MEASURE_TEXT),
+				(float)Game::SCREENHEIGHT / HELPER_LINE_DIVIDER + FONT_SIZE,
+				(float)MeasureText("Back", FONT_SIZE)* MULTIPLIER_BUTTON_WIDTH ,
+				(float)FONT_SIZE };
+		}
 		void showCredits()
 		{
+			initCreditsButtons();
+			updateCredits();
+
 			DrawText(FormatText("ASTEROIDS"), Game::HALF_SCREENWIDTH - (MeasureText("ASTEROIDS", FONT_SIZE_TITLE) / DIVIDER_MEASURE_TEXT), Game::SCREENHEIGHT / GAMETITLE_LINE_DIVIDER, FONT_SIZE_TITLE, GREEN);
 			DrawText(FormatText("Credits"), Game::HALF_SCREENWIDTH - (MeasureText("Credits", FONT_SIZE) / DIVIDER_MEASURE_TEXT), Game::SCREENHEIGHT / CREDITS_LINE_DIVIDER, FONT_SIZE, DARKGRAY);
 			DrawText(FormatText("Héctor Iván Pereira"), Game::HALF_SCREENWIDTH - (MeasureText("Hector Ivan Pereira", FONT_SIZE) / DIVIDER_MEASURE_TEXT), Game::SCREENHEIGHT / LINE_DIVIDER, FONT_SIZE, DARKGRAY);
@@ -34,17 +50,26 @@ namespace Game {
 			DrawText(FormatText(""), Game::HALF_SCREENWIDTH - (MeasureText("", FONT_SIZE) / DIVIDER_MEASURE_TEXT), Game::SCREENHEIGHT / LINE_DIVIDER + FONT_SIZE * 7, FONT_SIZE, DARKGRAY);
 			DrawText(FormatText(""), Game::HALF_SCREENWIDTH - (MeasureText("", FONT_SIZE_URL) / DIVIDER_MEASURE_TEXT), Game::SCREENHEIGHT / LINE_DIVIDER + FONT_SIZE * 8, FONT_SIZE_URL, DARKGRAY);
 			DrawText(FormatText(""), Game::HALF_SCREENWIDTH - (MeasureText("", FONT_SIZE_URL) / DIVIDER_MEASURE_TEXT), Game::SCREENHEIGHT / LINE_DIVIDER + (FONT_SIZE * 8) + FONT_SIZE_URL, FONT_SIZE_URL, DARKGRAY);
-			DrawText(FormatText("Press Esc to back to Menu"), Game::HALF_SCREENWIDTH - (MeasureText("Press Esc to back to Menu", FONT_SIZE_HELPER) / DIVIDER_MEASURE_TEXT), Game::SCREENHEIGHT / HELPER_LINE_DIVIDER + FONT_SIZE, FONT_SIZE_HELPER, DARKGRAY);
+
+			DrawRectangle(backButton.x, backButton.y, backButton.width, backButton.height, LIGHTGRAY);
+			DrawText(FormatText("Back"), Game::HALF_SCREENWIDTH - (MeasureText("Back", FONT_SIZE) / DIVIDER_MEASURE_TEXT), Game::SCREENHEIGHT / HELPER_LINE_DIVIDER + FONT_SIZE, FONT_SIZE, DARKGRAY);
+			
 			DrawText(FormatText("Version 0.2"), Game::HALF_SCREENWIDTH - (MeasureText("Version 0.2", FONT_SIZE_HELPER) / DIVIDER_MEASURE_TEXT), Game::SCREENHEIGHT / VERSION_LINE_DIVIDER + FONT_SIZE, FONT_SIZE_HELPER, DARKGRAY);
-			updateCredits();
+			
 		}
 		void updateCredits()
 		{
-			if (IsKeyPressed(KEY_ESCAPE))
+			mousePoint = GetMousePosition();
+
+			if (CheckCollisionPointRec(mousePoint, backButton))
 			{
-				MainMenu::menu = true;
-				credits = false;
+				if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+				{
+					MainMenu::menu = true;
+					credits = false;
+				}
 			}
+
 		}
 	}
 }

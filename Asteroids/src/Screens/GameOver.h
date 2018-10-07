@@ -3,6 +3,7 @@
 namespace Game {
 	namespace EndOfGame
 	{
+		void initGameOverButtons();
 		void showGameOver();
 		void updateGameOver();
 	}
