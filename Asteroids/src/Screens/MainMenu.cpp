@@ -63,29 +63,29 @@ namespace Game {
 		}
 		void UpdateMenu()
 		{
-
 			mousePoint = GetMousePosition();
-
-			if (CheckCollisionPointRec(mousePoint, playButton))
-			{
-				if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+			if (menu) {
+				if (CheckCollisionPointRec(mousePoint, playButton))
 				{
-					menu = false;
+					if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+					{
+						menu = false;
+					}
+				}
+				if (CheckCollisionPointRec(mousePoint, creditsButton))
+				{
+					if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+					{
+						menu = false;
+						Credits::credits = true;
+					}
+				}
+				if (CheckCollisionPointRec(mousePoint, exitButton))
+				{
+					if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+						CloseWindow();
 				}
 			}
-			if (CheckCollisionPointRec(mousePoint, creditsButton))
-			{
-				if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-				{
-					menu = false;
-					Credits::credits = true;
-				}
-			}
-			if (CheckCollisionPointRec(mousePoint, exitButton))
-			{
-				if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-					CloseWindow();
-			}		
 		}
 	}
 }

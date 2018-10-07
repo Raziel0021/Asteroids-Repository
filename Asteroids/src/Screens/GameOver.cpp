@@ -66,24 +66,24 @@ namespace Game {
 		void updateGameOver()
 		{
 			mousePoint = GetMousePosition();
-
-			if (CheckCollisionPointRec(mousePoint, menuButton))
-			{
-				if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+			if (gameover || victory) {
+				if (CheckCollisionPointRec(mousePoint, menuButton))
 				{
-					GamePlay::InitGame();
-					MainMenu::menu = true;
+					if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+					{
+						GamePlay::InitGame();
+						MainMenu::menu = true;
+					}
+				}
+
+				if (CheckCollisionPointRec(mousePoint, exitButton))
+				{
+					if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+					{
+						CloseWindow();
+					}
 				}
 			}
-
-			if (CheckCollisionPointRec(mousePoint, exitButton))
-			{
-				if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-				{
-					CloseWindow();
-				}
-			}
-
 		}
 	}
 }

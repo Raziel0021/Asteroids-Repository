@@ -114,6 +114,29 @@ namespace Game {
 		static const float MEDIUM_METEOR_ORIGIN_SCALE_DIVIDER = 9.0f;
 		static const float SMALL_METEOR_SCALE_DIVIDER = 9.0f;
 		static const float SMALL_METEOR_ORIGIN_SCALE_DIVIDER = 18.0f;
+
+		//Pause
+		static const int FONT_SIZE_OPTIONS = 50;
+		static const int FONT_SIZE_PAUSE_BUTTON = 35;
+		static const float HORIZONTAL_MARGIN = 10;
+		static const float VERTICAL_MARGIN = 80;
+		static const int DIVIDER_MEASURE_TEXT = 2;
+		static const float OPTIONS_LINE_DIVIDER = 3;
+		static const float PAUSE_LINE_DIVIDER = 1.05;
+		static const float PAUSE_PANEL_DIVIDER_Y = 5;
+		static const float PAUSE_PANEL_DIVIDER_X = 3.5f;
+		static const float PAUSE_PANEL_WIDTH;
+		static const float PAUSE_PANEL_HEIGHT=SCREENHEIGHT/3;
+		static const float MULTIPLIER_BUTTON_WIDTH = 1.15f;
+		static const float SPACE_BETWEEN_LINES = 1.3f;
+		static Vector2 mousePoint;
+
+		static Rectangle pauseButton;
+		static Rectangle menuPanel;
+		static Rectangle resumeButton;
+		static Rectangle menuButton;
+		static Rectangle resetButton;
+		
 		void InitGame() 
 		{
 			MainMenu::menu = true;
@@ -204,6 +227,32 @@ namespace Game {
 			}
 			midMeteorsCount = INIT_COUNT;
 			smallMeteorsCount = INIT_COUNT;
+			
+			//Pause
+			pauseButton = { (float)Game::SCREENWIDTH - (MeasureText("PAUSE", FONT_SIZE_PAUSE_BUTTON)* MULTIPLIER_BUTTON_WIDTH)-HORIZONTAL_MARGIN,
+				(float)Game::SCREENHEIGHT / PAUSE_LINE_DIVIDER,
+				(float)MeasureText("PAUSE", FONT_SIZE_PAUSE_BUTTON)* MULTIPLIER_BUTTON_WIDTH ,
+				(float)FONT_SIZE_PAUSE_BUTTON };
+
+			menuPanel = { (float)SCREENWIDTH/PAUSE_PANEL_DIVIDER_X  ,
+				(float)Game::SCREENHEIGHT / PAUSE_PANEL_DIVIDER_Y,
+				(float)HALF_SCREENHEIGHT ,
+				(float)PAUSE_PANEL_HEIGHT};
+
+			resumeButton = {(float) Game::HALF_SCREENWIDTH - (MeasureText("Resume", FONT_SIZE_OPTIONS) / DIVIDER_MEASURE_TEXT * MULTIPLIER_BUTTON_WIDTH) ,
+				(float)Game::SCREENHEIGHT / PAUSE_PANEL_DIVIDER_Y +VERTICAL_MARGIN,
+				(float)MeasureText("Resume", FONT_SIZE_OPTIONS)* MULTIPLIER_BUTTON_WIDTH ,
+				(float)FONT_SIZE_PAUSE_BUTTON* MULTIPLIER_BUTTON_WIDTH };
+
+			menuButton = { (float)Game::HALF_SCREENWIDTH - (MeasureText("Menu", FONT_SIZE_OPTIONS) / DIVIDER_MEASURE_TEXT * MULTIPLIER_BUTTON_WIDTH) ,
+				(float)Game::SCREENHEIGHT / PAUSE_PANEL_DIVIDER_Y +FONT_SIZE_OPTIONS+ VERTICAL_MARGIN,
+				(float)MeasureText("Menu", FONT_SIZE_OPTIONS)* MULTIPLIER_BUTTON_WIDTH ,
+				(float)FONT_SIZE_PAUSE_BUTTON* MULTIPLIER_BUTTON_WIDTH };
+			
+			resetButton = { (float)Game::HALF_SCREENWIDTH - (MeasureText("Restart", FONT_SIZE_OPTIONS) / DIVIDER_MEASURE_TEXT * MULTIPLIER_BUTTON_WIDTH) ,
+				(float)Game::SCREENHEIGHT / PAUSE_PANEL_DIVIDER_Y + FONT_SIZE_OPTIONS*2 + VERTICAL_MARGIN,
+				(float)MeasureText("Restart", FONT_SIZE_OPTIONS)* MULTIPLIER_BUTTON_WIDTH ,
+				(float)FONT_SIZE_PAUSE_BUTTON* MULTIPLIER_BUTTON_WIDTH };
 		}
 
 		void Play() 
@@ -212,7 +261,8 @@ namespace Game {
 			#ifdef AUDIO
 				UpdateAudioStream(music);
 			#endif // AUDIO
-			
+				mousePoint = GetMousePosition();
+
 			if (!pause) 
 			{
 				//Player: rotation
@@ -485,11 +535,41 @@ namespace Game {
 							}
 						}
 					}
-				}	
+				}
+
+				//Pause-Button
+				if (CheckCollisionPointRec(mousePoint, pauseButton))
+				{
+					if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+					{
+						pause = !pause;
+					}
+				}
 			}
 			if (destroyedMeteorsCount == MAX_BIG_METEORS + MAX_MEDIUM_METEORS + MAX_SMALL_METEORS)
 				victory = true;
-
+			if (CheckCollisionPointRec(mousePoint, resumeButton))
+			{
+				if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+				{
+					pause = !pause;
+				}
+			}
+			if (CheckCollisionPointRec(mousePoint, menuButton))
+			{
+				if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+				{
+					GamePlay::InitGame();
+				}
+			}
+			if (CheckCollisionPointRec(mousePoint, resetButton))
+			{
+				if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+				{
+					GamePlay::InitGame();
+					MainMenu::menu = false;
+				}
+			}
 		
 		}
 		
@@ -558,6 +638,28 @@ namespace Game {
 					DrawCircleV(shoot[i].position, shoot[i].radius, WHITE);
 			}
 
+			//Pause-Button
+			if (!pause)
+			{
+				DrawRectangle(pauseButton.x, pauseButton.y, pauseButton.width, pauseButton.height, LIGHTGRAY);
+				DrawText(FormatText("PAUSE"), Game::SCREENWIDTH - (MeasureText("PAUSE", FONT_SIZE_PAUSE_BUTTON)*MULTIPLIER_BUTTON_WIDTH - HORIZONTAL_MARGIN) - HORIZONTAL_MARGIN, Game::SCREENHEIGHT / PAUSE_LINE_DIVIDER, FONT_SIZE_PAUSE_BUTTON, DARKGRAY);
+			}
+			//Pause-Menu
+			if (pause) 
+			{
+				//Panel
+				DrawRectangle(menuPanel.x, menuPanel.y, menuPanel.width, menuPanel.height, DARKGRAY);
+				//Buttons
+				DrawRectangle(resumeButton.x, resumeButton.y, resumeButton.width, resumeButton.height, LIGHTGRAY);
+				DrawText(FormatText("Resume"), Game::HALF_SCREENWIDTH - (MeasureText("Resume", FONT_SIZE_OPTIONS)/DIVIDER_MEASURE_TEXT*MULTIPLIER_BUTTON_WIDTH )+HORIZONTAL_MARGIN , Game::SCREENHEIGHT / PAUSE_PANEL_DIVIDER_Y +VERTICAL_MARGIN, FONT_SIZE_OPTIONS, RAYWHITE);
+				
+				DrawRectangle(menuButton.x, menuButton.y, menuButton.width, menuButton.height, LIGHTGRAY);
+				DrawText(FormatText("Menu"), Game::HALF_SCREENWIDTH - (MeasureText("Menu", FONT_SIZE_OPTIONS) / DIVIDER_MEASURE_TEXT * MULTIPLIER_BUTTON_WIDTH) + HORIZONTAL_MARGIN, Game::SCREENHEIGHT / PAUSE_PANEL_DIVIDER_Y+FONT_SIZE_OPTIONS + VERTICAL_MARGIN, FONT_SIZE_OPTIONS, RAYWHITE);
+				
+				DrawRectangle(resetButton.x, resetButton.y, resetButton.width, resetButton.height, LIGHTGRAY);
+				DrawText(FormatText("Restart"), Game::HALF_SCREENWIDTH - (MeasureText("Restart", FONT_SIZE_OPTIONS) / DIVIDER_MEASURE_TEXT * MULTIPLIER_BUTTON_WIDTH) + HORIZONTAL_MARGIN, Game::SCREENHEIGHT / PAUSE_PANEL_DIVIDER_Y +FONT_SIZE_OPTIONS*2+ VERTICAL_MARGIN, FONT_SIZE_OPTIONS, RAYWHITE);
+				
+			}
 		}
 	}
 }
