@@ -9,7 +9,7 @@
 using namespace Game;
 namespace Game {
 	namespace GamePlay {
-		const int PLAYER_BASE_SIZE = 20;
+		const int PLAYER_BASE_SIZE = 25;
 		const float PLAYER_SPEED = 300.0f;
 		const int PLAYER_MAX_SHOOTS = 10;
 
@@ -70,51 +70,57 @@ namespace Game {
 		static float initPosX, initPosY;
 		static float initVelX, initVelY;
 		static int correctRange;
-
+		//Player Variables: Position and Speed
 		static const float HALF_PLAYER_BASE_SIZE = PLAYER_BASE_SIZE / 2;
 		static const float HALF_SCREENHEIGHT = SCREENHEIGHT / 2;
 		static const float HALF_SCREENWIDTH = SCREENWIDTH / 2;
 		static const Vector2 INIT_SPEED = {0,0};
 		static const Vector2 INIT_POSITION = { 0,0 };
 		static const short INIT_ACCELRATION = 0;
+		//Rotation Variables
 		static const short INIT_ROTATION = 0;
 		static const short BASE_SPEED_ROTATION = 150;
-		static const float BASE_ACCELERATION = 0.04f;
+		static Vector2 dif_Pos_Mouse_Pos ;
+		static float angle;
+		static const float ALIGNMENT_COEFFICIENT = 90;
+		//Acceleration Variables
+		static Vector2 previusSpeed;
+		static const float BASE_ACCELERATION = 0.5f;
 		static const float BASE_DESACCELERATION = 0.5f;
 		static const short MAX_ACCELERATION = 1;
 		static const short ZERO_ACCELERATION = 0;
+		//Shoot Variables
 		static const short INIT_COUNT = 0;
 		static const short INIT_SHOOT_RADIUS = 2;
 		static const float SHOOT_SPEED = 1.5;
+		static const float SHOOT_MAX_LIFETIME = 0.1f;
+		static const short LIM_RANGE = 150;
+		static const short INIT_LIFE_SPAWN = 0;
+		//Meteor Variables
 		static const short INIT_BIG_METEOR_RADIUS = 40;
 		static const short INIT_MEDIUM_METEOR_RADIUS = INIT_BIG_METEOR_RADIUS /2;
 		static const short INIT_SMALL_METEOR_RADIUS = INIT_MEDIUM_METEOR_RADIUS/2;
-		static const short INIT_LIFE_SPAWN = 0;
-		static const float SHOOT_MAX_LIFETIME = 0.1f;
-		static const short LIM_RANGE = 150;
+		static const float ALPHA_DEACTIVATE_METEOR = 0.3f;
+		//Ship Variables
 		static const float SHIPHEIGHT_DIVIDER = 2.5f;
 		static const short SHIP_COLLIDER_Z = 11;
 		static const short PAIR_DIVIDER = 2;
-
-		static const float ALPHA_DEACTIVATE_METEOR = 0.3f;
-
+		//2d Texture Variables:Rocket
 		static Rectangle RocketSourceRect;
 		static Rectangle RocketDestRect;
 		static Vector2 RocketOrigin;
 		static const float ROCKET_SCALE_DIVIDER = 6.0f;
 		static const float ROCKET_ORIGIN_SCALE_DIVIDER = 12.0f;
-
+		//Meteors
 		static Rectangle AsteroidSourceRect;
 		static Rectangle AsteroidDestRect;
 		static Vector2 AsteroidOrigin;
-
 		static const float BIG_METEOR_SCALE_DIVIDER = 2.25f;
 		static const float BIG_METEOR_ORIGIN_SCALE_DIVIDER = 4.5f;
 		static const float MEDIUM_METEOR_SCALE_DIVIDER = 4.5f;
 		static const float MEDIUM_METEOR_ORIGIN_SCALE_DIVIDER = 9.0f;
 		static const float SMALL_METEOR_SCALE_DIVIDER = 9.0f;
 		static const float SMALL_METEOR_ORIGIN_SCALE_DIVIDER = 18.0f;
-
 		//Pause
 		static const int FONT_SIZE_OPTIONS = 50;
 		static const int FONT_SIZE_PAUSE_BUTTON = 35;
@@ -152,9 +158,8 @@ namespace Game {
 			player.speed = INIT_SPEED;
 			player.acceleration = INIT_ACCELRATION;
 			player.rotation = INIT_ROTATION;
-			player.collider = { player.position.x+sin(player.rotation*DEG2RAD)*(shipHeight/2.5f),player.position.y - cos(player.rotation*DEG2RAD)*(shipHeight/2.5f),12};
+			player.collider = { player.position.x+sin(player.rotation*DEG2RAD)*(shipHeight/2.5f),player.position.y - cos(player.rotation*DEG2RAD)*(shipHeight/2.5f),SHIP_COLLIDER_Z};
 			player.color = DARKGREEN;
-
 			destroyedMeteorsCount = INIT_COUNT;
 
 			//Init Shoot
@@ -261,27 +266,39 @@ namespace Game {
 			#ifdef AUDIO
 				UpdateAudioStream(music);
 			#endif // AUDIO
-				mousePoint = GetMousePosition();
-
+			
+			mousePoint = GetMousePosition();
 			if (!pause) 
 			{
 				//Player: rotation
-				if (IsKeyDown(KEY_A))
+				dif_Pos_Mouse_Pos.x = player.position.x - mousePoint.x;
+				dif_Pos_Mouse_Pos.y = player.position.y - mousePoint.y;
+				angle = (atan2(dif_Pos_Mouse_Pos.y, dif_Pos_Mouse_Pos.x)*RAD2DEG-ALIGNMENT_COEFFICIENT);
+				player.rotation = angle;
+
+				/*if (IsKeyDown(KEY_A))
 					player.rotation -= BASE_SPEED_ROTATION * GetFrameTime();
 				if (IsKeyDown(KEY_D))
-					player.rotation += BASE_SPEED_ROTATION * GetFrameTime();;
-
-				//Player: speed
-				player.speed.x = sin(player.rotation * DEG2RAD)*PLAYER_SPEED;
-				player.speed.y = cos(player.rotation * DEG2RAD)*PLAYER_SPEED;
+					player.rotation += BASE_SPEED_ROTATION * GetFrameTime();*/
 
 				//Player: acceleration
-				if (IsKeyDown(KEY_W))
+				if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON))
 				{
+					//Player: speed
+					player.speed.x = sin(player.rotation * DEG2RAD)*PLAYER_SPEED;
+					player.speed.y = cos(player.rotation * DEG2RAD)*PLAYER_SPEED;
+
 					if (player.acceleration < MAX_ACCELERATION) 
-						player.acceleration += BASE_ACCELERATION ;
+						player.acceleration += BASE_ACCELERATION *GetFrameTime();
 				}
-				else
+				/*if (IsMouseButtonReleased(MOUSE_RIGHT_BUTTON)) 
+				{
+					if ((previusSpeed.x == 0 && previusSpeed.y == 0) || (previusSpeed.x == player.speed.x || previusSpeed.y == player.speed.y))
+					{
+						previusSpeed = player.speed;
+					}
+				}*/
+				/*else
 				{
 					if (player.acceleration > ZERO_ACCELERATION)
 						player.acceleration -= BASE_DESACCELERATION * GetFrameTime();
@@ -295,7 +312,7 @@ namespace Game {
 					else
 						if (player.acceleration < ZERO_ACCELERATION)
 							player.acceleration = ZERO_ACCELERATION;
-				}
+				}*/
 
 				//Player: Movement
 				player.position.x += (player.speed.x*player.acceleration)* GetFrameTime();
@@ -303,17 +320,24 @@ namespace Game {
 
 				//Collision: Player vs Walls
 				if (player.position.x > SCREENWIDTH + shipHeight)
+				{
 					player.position.x = -(shipHeight);
+				}
 				else if (player.position.x < -(shipHeight))
+				{
 					player.position.x = SCREENWIDTH + shipHeight;
+				}
 				if (player.position.y > (SCREENHEIGHT + shipHeight))
+				{
 					player.position.y = -(shipHeight);
+				}
 				else if (player.position.y < -(shipHeight))
+				{
 					player.position.y = SCREENHEIGHT + shipHeight;
+				}
 
 				//Player shoot logic
-
-				if (IsKeyPressed(KEY_SPACE))
+				if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
 				{
 					for (int i = 0; i < PLAYER_MAX_SHOOTS; i++)
 					{
@@ -380,17 +404,23 @@ namespace Game {
 				for (int m = 0; m < MAX_BIG_METEORS; m++)
 				{
 					if (CheckCollisionCircles({ player.collider.x , player.collider.y }, player.collider.z, bigMeteor[m].position, bigMeteor[m].radius) && bigMeteor[m].active)
+					{
 						gameover = true;
+					}
 				}
 				for (int m = 0; m < MAX_MEDIUM_METEORS; m++)
 				{
 					if (CheckCollisionCircles({ player.collider.x,player.collider.y }, player.collider.z, mediumMeteor[m].position, mediumMeteor[m].radius) && mediumMeteor[m].active)
+					{
 						gameover = true;
+					}
 				}
 				for (int m = 0; m < MAX_SMALL_METEORS; m++)
 				{
 					if (CheckCollisionCircles({ player.collider.x,player.collider.y }, player.collider.z, smallMeteor[m].position, smallMeteor[m].radius) && smallMeteor[m].active)
+					{
 						gameover = true;
+					}
 				}
 
 				//Meteors logic -Big Meteors
@@ -404,14 +434,21 @@ namespace Game {
 
 						//Collision meteor vs wall
 						if (bigMeteor[i].position.x > (SCREENWIDTH + bigMeteor[i].radius))
+						{
 							bigMeteor[i].position.x = -(bigMeteor[i].radius);
+						}
 						else if (bigMeteor[i].position.x < INIT_POSITION.x - bigMeteor[i].radius)
+						{
 							bigMeteor[i].position.x = SCREENWIDTH + bigMeteor[i].radius;
-						
-						if (bigMeteor[i].position.y >(SCREENHEIGHT + bigMeteor[i].radius))
+						}
+						if (bigMeteor[i].position.y > (SCREENHEIGHT + bigMeteor[i].radius))
+						{
 							bigMeteor[i].position.y = -(bigMeteor[i].radius);
+						}
 						else if (bigMeteor[i].position.y < INIT_POSITION.y - bigMeteor[i].radius)
-							bigMeteor[i].position.y = SCREENHEIGHT + bigMeteor[i].radius;	
+						{
+							bigMeteor[i].position.y = SCREENHEIGHT + bigMeteor[i].radius;
+						}
 					}
 				}
 				//Meteors logic -Medium Meteors
@@ -424,15 +461,23 @@ namespace Game {
 						mediumMeteor[i].position.y += mediumMeteor[i].speed.y * GetFrameTime();
 
 						//Collision meteor vs wall
-						if (mediumMeteor[i].position.x >(SCREENWIDTH + mediumMeteor[i].radius))
+						if (mediumMeteor[i].position.x > (SCREENWIDTH + mediumMeteor[i].radius))
+						{
 							mediumMeteor[i].position.x = -(mediumMeteor[i].radius);
+						}
 						else if (mediumMeteor[i].position.x < INIT_POSITION.x - mediumMeteor[i].radius)
+						{
 							mediumMeteor[i].position.x = SCREENWIDTH + mediumMeteor[i].radius;
+						}
 
-						if (mediumMeteor[i].position.y >(SCREENHEIGHT + mediumMeteor[i].radius))
+						if (mediumMeteor[i].position.y > (SCREENHEIGHT + mediumMeteor[i].radius))
+						{
 							mediumMeteor[i].position.y = -(mediumMeteor[i].radius);
+						}
 						else if (mediumMeteor[i].position.y < INIT_POSITION.y - mediumMeteor[i].radius)
+						{
 							mediumMeteor[i].position.y = SCREENHEIGHT + mediumMeteor[i].radius;
+						}
 					}
 				}
 				//Meteors logic -Small Meteors
@@ -445,18 +490,24 @@ namespace Game {
 						smallMeteor[i].position.y += smallMeteor[i].speed.y *GetFrameTime();
 
 						//Collision meteor vs wall
-						if (smallMeteor[i].position.x >(SCREENWIDTH + smallMeteor[i].radius))
+						if (smallMeteor[i].position.x > (SCREENWIDTH + smallMeteor[i].radius))
+						{
 							smallMeteor[i].position.x = -(smallMeteor[i].radius);
+						}
 						else if (smallMeteor[i].position.x < INIT_POSITION.x - smallMeteor[i].radius)
+						{
 							smallMeteor[i].position.x = SCREENWIDTH + smallMeteor[i].radius;
-
-						if (smallMeteor[i].position.y >(SCREENHEIGHT + smallMeteor[i].radius))
+						}
+						if (smallMeteor[i].position.y > (SCREENHEIGHT + smallMeteor[i].radius))
+						{
 							smallMeteor[i].position.y = -(smallMeteor[i].radius);
+						}
 						else if (smallMeteor[i].position.y < INIT_POSITION.y - smallMeteor[i].radius)
+						{
 							smallMeteor[i].position.y = SCREENHEIGHT + smallMeteor[i].radius;
+						}
 					}
 				}
-
 				//Collision Player-shoots vs meteors
 				for (int i = 0; i < PLAYER_MAX_SHOOTS; i++) 
 				{
@@ -491,7 +542,6 @@ namespace Game {
 								a = MAX_BIG_METEORS;
 							}
 						}
-						
 						for (int b = 0; b < MAX_MEDIUM_METEORS; b++)
 						{
 							if (mediumMeteor[b].active && CheckCollisionCircles(shoot[i].position, shoot[i].radius, mediumMeteor[b].position, mediumMeteor[b].radius))
@@ -521,7 +571,6 @@ namespace Game {
 								b = MAX_MEDIUM_METEORS;
 							}
 						}
-
 						for (int c = 0; c < MAX_SMALL_METEORS; c++)
 						{
 							if (smallMeteor[c].active && CheckCollisionCircles(shoot[i].position, shoot[i].radius, smallMeteor[c].position, smallMeteor[c].radius))
@@ -536,7 +585,6 @@ namespace Game {
 						}
 					}
 				}
-
 				//Pause-Button
 				if (CheckCollisionPointRec(mousePoint, pauseButton))
 				{
@@ -548,39 +596,39 @@ namespace Game {
 			}
 			if (destroyedMeteorsCount == MAX_BIG_METEORS + MAX_MEDIUM_METEORS + MAX_SMALL_METEORS)
 				victory = true;
-			if (CheckCollisionPointRec(mousePoint, resumeButton))
-			{
-				if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+			if (pause) {
+				if (CheckCollisionPointRec(mousePoint, resumeButton))
 				{
-					pause = !pause;
+					if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+					{
+						pause = !pause;
+					}
+				}
+				if (CheckCollisionPointRec(mousePoint, menuButton))
+				{
+					if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON))
+					{
+						GamePlay::InitGame();
+					}
+				}
+				if (CheckCollisionPointRec(mousePoint, resetButton))
+				{
+					if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON))
+					{
+						GamePlay::InitGame();
+						MainMenu::menu = false;
+					}
 				}
 			}
-			if (CheckCollisionPointRec(mousePoint, menuButton))
-			{
-				if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-				{
-					GamePlay::InitGame();
-				}
-			}
-			if (CheckCollisionPointRec(mousePoint, resetButton))
-			{
-				if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-				{
-					GamePlay::InitGame();
-					MainMenu::menu = false;
-				}
-			}
-		
 		}
 		
 		void DrawGame()
 		{
-			//SpaceShip
-			Vector2 v1 = { player.position.x + sinf(player.rotation*DEG2RAD)*shipHeight,player.position.y - cosf(player.rotation*DEG2RAD)*shipHeight };
+			//SpaceShip Reference
+			/*Vector2 v1 = { player.position.x + sinf(player.rotation*DEG2RAD)*shipHeight,player.position.y - cosf(player.rotation*DEG2RAD)*shipHeight };
 			Vector2 v2 = { player.position.x - cosf(player.rotation*DEG2RAD)*(HALF_PLAYER_BASE_SIZE),player.position.y - sinf(player.rotation*DEG2RAD)*(HALF_PLAYER_BASE_SIZE) };
 			Vector2 v3 = { player.position.x + cosf(player.rotation*DEG2RAD)*(HALF_PLAYER_BASE_SIZE),player.position.y + sinf(player.rotation*DEG2RAD)*(HALF_PLAYER_BASE_SIZE) };
-		
-			DrawTriangle(v1, v2, v3, RED);
+			DrawTriangle(v1, v2, v3, RED);*/
 
 			RocketSourceRect = { INIT_POSITION.x, INIT_POSITION.y, (float)rocket.width, (float)rocket.height };
 			RocketDestRect = { player.position.x ,player.position.y,(float)rocket.width/ROCKET_SCALE_DIVIDER,(float)rocket.height/ROCKET_SCALE_DIVIDER };
@@ -592,43 +640,43 @@ namespace Game {
 			{
 				if (bigMeteor[i].active)
 				{
-					DrawCircleV(bigMeteor[i].position, bigMeteor[i].radius, WHITE);
+					//DrawCircleV(bigMeteor[i].position, bigMeteor[i].radius, WHITE);
 					
 					AsteroidSourceRect = { INIT_POSITION.x, INIT_POSITION.y, (float)asteroid.width, (float)asteroid.height };
 					AsteroidDestRect = { bigMeteor[i].position.x ,bigMeteor[i].position.y,(float)asteroid.width / BIG_METEOR_SCALE_DIVIDER,(float)asteroid.height / BIG_METEOR_SCALE_DIVIDER };
 					AsteroidOrigin = { (float)asteroid.width / BIG_METEOR_ORIGIN_SCALE_DIVIDER ,(float)asteroid.height / BIG_METEOR_ORIGIN_SCALE_DIVIDER };
 					DrawTexturePro(asteroid, AsteroidSourceRect, AsteroidDestRect, AsteroidOrigin, 0, WHITE);
 				}
-				else
-					DrawCircleV(bigMeteor[i].position, bigMeteor[i].radius, Fade(BLANK, ALPHA_DEACTIVATE_METEOR));
+				/*else
+					DrawCircleV(bigMeteor[i].position, bigMeteor[i].radius, Fade(BLANK, ALPHA_DEACTIVATE_METEOR));*/
 			}
 			for (int i = 0; i < MAX_MEDIUM_METEORS; i++)
 			{
 				if (mediumMeteor[i].active)
 				{
-					DrawCircleV(mediumMeteor[i].position, mediumMeteor[i].radius, WHITE);
+					//DrawCircleV(mediumMeteor[i].position, mediumMeteor[i].radius, WHITE);
 					
 					AsteroidSourceRect = { INIT_POSITION.x, INIT_POSITION.y, (float)asteroid.width, (float)asteroid.height };
 					AsteroidDestRect = { mediumMeteor[i].position.x ,mediumMeteor[i].position.y,(float)asteroid.width / MEDIUM_METEOR_SCALE_DIVIDER,(float)asteroid.height / MEDIUM_METEOR_SCALE_DIVIDER };
 					AsteroidOrigin = { (float)asteroid.width / MEDIUM_METEOR_ORIGIN_SCALE_DIVIDER ,(float)asteroid.height / MEDIUM_METEOR_ORIGIN_SCALE_DIVIDER };
 					DrawTexturePro(asteroid, AsteroidSourceRect, AsteroidDestRect, AsteroidOrigin, 0, WHITE);
 				}
-				else
-					DrawCircleV(mediumMeteor[i].position, mediumMeteor[i].radius, Fade(BLANK, ALPHA_DEACTIVATE_METEOR));
+				/*else
+					DrawCircleV(mediumMeteor[i].position, mediumMeteor[i].radius, Fade(BLANK, ALPHA_DEACTIVATE_METEOR));*/
 			}
 			for (int i = 0; i < MAX_SMALL_METEORS; i++)
 			{
 				if (smallMeteor[i].active)
 				{
-					DrawCircleV(smallMeteor[i].position, smallMeteor[i].radius, WHITE);
+					/*DrawCircleV(smallMeteor[i].position, smallMeteor[i].radius, WHITE);*/
 					
 					AsteroidSourceRect = { INIT_POSITION.x, INIT_POSITION.y, (float)asteroid.width, (float)asteroid.height };
 					AsteroidDestRect = { smallMeteor[i].position.x ,smallMeteor[i].position.y,(float)asteroid.width / SMALL_METEOR_SCALE_DIVIDER,(float)asteroid.height / SMALL_METEOR_SCALE_DIVIDER };
 					AsteroidOrigin = { (float)asteroid.width / SMALL_METEOR_ORIGIN_SCALE_DIVIDER ,(float)asteroid.height / SMALL_METEOR_ORIGIN_SCALE_DIVIDER };
 					DrawTexturePro(asteroid, AsteroidSourceRect, AsteroidDestRect, AsteroidOrigin, 0, WHITE);
 				}
-				else
-					DrawCircleV(smallMeteor[i].position, smallMeteor[i].radius, Fade(BLANK, ALPHA_DEACTIVATE_METEOR));
+				/*else
+					DrawCircleV(smallMeteor[i].position, smallMeteor[i].radius, Fade(BLANK, ALPHA_DEACTIVATE_METEOR));*/
 			}
 
 			//Shoot
@@ -658,7 +706,6 @@ namespace Game {
 				
 				DrawRectangle(resetButton.x, resetButton.y, resetButton.width, resetButton.height, LIGHTGRAY);
 				DrawText(FormatText("Restart"), Game::HALF_SCREENWIDTH - (MeasureText("Restart", FONT_SIZE_OPTIONS) / DIVIDER_MEASURE_TEXT * MULTIPLIER_BUTTON_WIDTH) + HORIZONTAL_MARGIN, Game::SCREENHEIGHT / PAUSE_PANEL_DIVIDER_Y +FONT_SIZE_OPTIONS*2+ VERTICAL_MARGIN, FONT_SIZE_OPTIONS, RAYWHITE);
-				
 			}
 		}
 	}
