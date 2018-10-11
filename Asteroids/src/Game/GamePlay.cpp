@@ -84,11 +84,13 @@ namespace Game {
 		static float angle;
 		static const float ALIGNMENT_COEFFICIENT = 90;
 		//Acceleration Variables
-		static Vector2 previusSpeed;
-		static const float BASE_ACCELERATION = 0.5f;
+		static Vector2 acceleration = {0,0};
+		static const float BASE_ACCELERATION = 0.1f;
 		static const float BASE_DESACCELERATION = 0.5f;
 		static const short MAX_ACCELERATION = 1;
 		static const short ZERO_ACCELERATION = 0;
+		static float vectorModule;
+		static Vector2 normalize_Acceleration;
 		//Shoot Variables
 		static const short INIT_COUNT = 0;
 		static const short INIT_SHOOT_RADIUS = 2;
@@ -271,53 +273,26 @@ namespace Game {
 			if (!pause) 
 			{
 				//Player: rotation
-				dif_Pos_Mouse_Pos.x = player.position.x - mousePoint.x;
-				dif_Pos_Mouse_Pos.y = player.position.y - mousePoint.y;
-				angle = (atan2(dif_Pos_Mouse_Pos.y, dif_Pos_Mouse_Pos.x)*RAD2DEG-ALIGNMENT_COEFFICIENT);
+				dif_Pos_Mouse_Pos.x = mousePoint.x - player.position.x;
+				dif_Pos_Mouse_Pos.y = mousePoint.y - player.position.y;
+				angle = (atan2(dif_Pos_Mouse_Pos.y, dif_Pos_Mouse_Pos.x)*RAD2DEG+ALIGNMENT_COEFFICIENT);
 				player.rotation = angle;
-
-				/*if (IsKeyDown(KEY_A))
-					player.rotation -= BASE_SPEED_ROTATION * GetFrameTime();
-				if (IsKeyDown(KEY_D))
-					player.rotation += BASE_SPEED_ROTATION * GetFrameTime();*/
 
 				//Player: acceleration
 				if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON))
 				{
-					//Player: speed
-					player.speed.x = sin(player.rotation * DEG2RAD)*PLAYER_SPEED;
-					player.speed.y = cos(player.rotation * DEG2RAD)*PLAYER_SPEED;
-
-					if (player.acceleration < MAX_ACCELERATION) 
-						player.acceleration += BASE_ACCELERATION *GetFrameTime();
+					vectorModule = sqrtf(pow (dif_Pos_Mouse_Pos.x,2) +pow(dif_Pos_Mouse_Pos.y,2));
+					normalize_Acceleration.x = dif_Pos_Mouse_Pos.x / vectorModule;
+					normalize_Acceleration.y = dif_Pos_Mouse_Pos.y / vectorModule;
+					
+					acceleration.x += normalize_Acceleration.x *BASE_ACCELERATION;
+					acceleration.y += normalize_Acceleration.y *BASE_ACCELERATION;	
 				}
-				/*if (IsMouseButtonReleased(MOUSE_RIGHT_BUTTON)) 
-				{
-					if ((previusSpeed.x == 0 && previusSpeed.y == 0) || (previusSpeed.x == player.speed.x || previusSpeed.y == player.speed.y))
-					{
-						previusSpeed = player.speed;
-					}
-				}*/
-				/*else
-				{
-					if (player.acceleration > ZERO_ACCELERATION)
-						player.acceleration -= BASE_DESACCELERATION * GetFrameTime();
-					else if (player.acceleration < ZERO_ACCELERATION)
-						player.acceleration = ZERO_ACCELERATION;					
-				}
-				if (IsKeyDown(KEY_S))
-				{
-					if (player.acceleration > ZERO_ACCELERATION)
-						player.acceleration -= BASE_ACCELERATION ;
-					else
-						if (player.acceleration < ZERO_ACCELERATION)
-							player.acceleration = ZERO_ACCELERATION;
-				}*/
-
+				
 				//Player: Movement
-				player.position.x += (player.speed.x*player.acceleration)* GetFrameTime();
-				player.position.y -= (player.speed.y*player.acceleration)* GetFrameTime();
-
+				player.position.x = player.position.x + acceleration.x  * GetFrameTime();
+				player.position.y = player.position.y + acceleration.y  * GetFrameTime();
+				
 				//Collision: Player vs Walls
 				if (player.position.x > SCREENWIDTH + shipHeight)
 				{
