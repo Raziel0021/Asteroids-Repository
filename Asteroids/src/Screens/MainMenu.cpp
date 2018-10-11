@@ -58,7 +58,7 @@ namespace Game {
 			DrawRectangle(exitButton.x, exitButton.y, exitButton.width, exitButton.height, LIGHTGRAY);
 			DrawText(FormatText("Exit"), Game::HALF_SCREENWIDTH - (MeasureText("Exit", FONT_SIZE_OPTIONS) / DIVIDER_MEASURE_TEXT), Game::SCREENHEIGHT / OPTIONS_LINE_DIVIDER + (FONT_SIZE_OPTIONS * 2)*SPACE_BETWEEN_LINES, FONT_SIZE_OPTIONS, DARKGRAY);
 			
-			DrawText(FormatText("Version 0.2"), Game::HALF_SCREENWIDTH - (MeasureText("Version 0.2", FONT_SIZE_VERSION) / DIVIDER_MEASURE_TEXT), Game::SCREENHEIGHT / VERSION_LINE_DIVIDER + FONT_SIZE_OPTIONS, FONT_SIZE_VERSION, DARKGRAY);
+			DrawText(FormatText("Version 0.3"), Game::HALF_SCREENWIDTH - (MeasureText("Version 0.3", FONT_SIZE_VERSION) / DIVIDER_MEASURE_TEXT), Game::SCREENHEIGHT / VERSION_LINE_DIVIDER + FONT_SIZE_OPTIONS, FONT_SIZE_VERSION, DARKGRAY);
 			
 		}
 		void UpdateMenu()
