@@ -21,8 +21,8 @@ Como he mencionado anteriormente, no hace falta instalar el juego, solo acceder 
 ## Programado con
 
 * C++
-*[Raylib](https://www.raylib.com/) - Librerias utilizadas
-*Visual Studio 2017
+* [Raylib](https://www.raylib.com/) - Librerias utilizadas
+* Visual Studio 2017
 
 ## Authors
 
