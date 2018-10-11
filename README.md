@@ -1,4 +1,4 @@
-#Asteroids
+# Asteroids
 
 Esta versión de Asteroids ha sido creado con motivos educacionales, el juego en si, para 
 los que no lo conozcan, se trata sobre destruir asteroides en el espacio disparandoles con tu nave y evitar
@@ -24,7 +24,7 @@ Como he mencionado anteriormente, no hace falta instalar el juego, solo acceder 
 * [Raylib](https://www.raylib.com/) - Librerias utilizadas
 * Visual Studio 2017
 
-## Authors
+## Autor
 
 * **Pereira Héctor Iván** - *Trabajo Inicial* - [Raziel0021](https://github.com/Raziel0021)
 
