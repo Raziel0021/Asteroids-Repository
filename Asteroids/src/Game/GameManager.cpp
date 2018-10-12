@@ -12,16 +12,17 @@ using namespace MainMenu;
 namespace Game 
 {
 	const int SCREENWIDTH = 1080;
-	const int SCREENHEIGHT = 900;
+	const int SCREENHEIGHT = 800;
 	const float HALF_SCREENHEIGHT = SCREENHEIGHT / 2;
 	const float HALF_SCREENWIDTH = SCREENWIDTH / 2;
+	bool close=false;
 	namespace GameManager 
 	{
 		void Run() 
 		{
 			InitializeApp();
 			GamePlay::InitGame();
-			while (!WindowShouldClose())
+			while (!WindowShouldClose()&&!close)
 			{
 				if (!GamePlay::gameover && !GamePlay::victory && !menu && !Credits::credits) {
 					GamePlay::Play();	
@@ -63,19 +64,23 @@ namespace Game
 			//#define AUDIO
 
 			#ifdef AUDIO	
-			InitAudioDevice();
-			ping = LoadSound("res/");
-			pong = LoadSound("res/");
-			music = LoadMusicStream("res/");
-			PlayMusicStream(music);
+				InitAudioDevice();
+				ping = LoadSound("res/");
+				pong = LoadSound("res/");
+				music = LoadMusicStream("res/");
+				PlayMusicStream(music);
 			#endif // AUDIO
 		}
 		void UnloadGame()
 		{
-			UnloadTexture (GamePlay::rocket);
-			CloseAudioDevice();
-			CloseWindow();
 			// TODO: Unload all dynamic loaded data (textures, sounds, models...)
+			UnloadTexture (GamePlay::rocket);
+			UnloadTexture(GamePlay::asteroid);
+			#ifdef AUDIO
+				CloseAudioDevice();
+			#endif // AUDIO
+			close = true;
+			//CloseWindow();
 		}
 	}
 }

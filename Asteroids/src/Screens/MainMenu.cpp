@@ -83,7 +83,8 @@ namespace Game {
 				if (CheckCollisionPointRec(mousePoint, exitButton))
 				{
 					if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-						CloseWindow();
+						GameManager::UnloadGame();
+						//CloseWindow();
 				}
 			}
 		}

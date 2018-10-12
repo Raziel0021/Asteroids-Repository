@@ -80,7 +80,8 @@ namespace Game {
 				{
 					if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
 					{
-						CloseWindow();
+						GameManager::UnloadGame();
+						//CloseWindow();
 					}
 				}
 			}
