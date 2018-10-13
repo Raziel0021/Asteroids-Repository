@@ -12,7 +12,7 @@ using namespace MainMenu;
 namespace Game 
 {
 	const int SCREENWIDTH = 1080;
-	const int SCREENHEIGHT = 800;
+	const int SCREENHEIGHT = 860;
 	const float HALF_SCREENHEIGHT = SCREENHEIGHT / 2;
 	const float HALF_SCREENWIDTH = SCREENWIDTH / 2;
 	bool close=false;

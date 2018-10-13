@@ -130,7 +130,7 @@ namespace Game {
 		static const int FONT_SIZE_OPTIONS = 50;
 		static const int FONT_SIZE_PAUSE_BUTTON = 35;
 		static const float HORIZONTAL_MARGIN = 10;
-		static const float VERTICAL_MARGIN = 80;
+		static const float VERTICAL_MARGIN = 60;
 		static const int DIVIDER_MEASURE_TEXT = 2;
 		static const float OPTIONS_LINE_DIVIDER = 3;
 		static const float PAUSE_LINE_DIVIDER = 1.05;
@@ -147,12 +147,14 @@ namespace Game {
 		static Rectangle resumeButton;
 		static Rectangle menuButton;
 		static Rectangle resetButton;
-		
+		static Rectangle muteButton;
+
 		void InitGame() 
 		{
 			MainMenu::menu = true;
 			correctRange = false;
 			victory = false;
+			mute = false;
 			pause = false;
 			gameover = false;
 
@@ -263,12 +265,17 @@ namespace Game {
 				(float)Game::SCREENHEIGHT / PAUSE_PANEL_DIVIDER_Y + FONT_SIZE_OPTIONS*2 + VERTICAL_MARGIN,
 				(float)MeasureText("Restart", FONT_SIZE_OPTIONS)* MULTIPLIER_BUTTON_WIDTH ,
 				(float)FONT_SIZE_PAUSE_BUTTON* MULTIPLIER_BUTTON_WIDTH };
+			muteButton = { (float)Game::HALF_SCREENWIDTH - (MeasureText("Mute ON/OFF", FONT_SIZE_OPTIONS) / DIVIDER_MEASURE_TEXT * MULTIPLIER_BUTTON_WIDTH) ,
+				(float)Game::SCREENHEIGHT / PAUSE_PANEL_DIVIDER_Y + FONT_SIZE_OPTIONS * 3 + VERTICAL_MARGIN,
+				(float)MeasureText("Mute ON/OFF", FONT_SIZE_OPTIONS)+HORIZONTAL_MARGIN,
+				(float)FONT_SIZE_PAUSE_BUTTON* MULTIPLIER_BUTTON_WIDTH };
 		}
 
 		void Play() 
 		{
 			#define AUDIO
 			#ifdef AUDIO
+			if(!mute)
 				UpdateMusicStream(music);
 			#endif // AUDIO
 			
@@ -329,9 +336,12 @@ namespace Game {
 							break;
 						}
 					}
-				#ifdef AUDIO
-					PlaySound(shootSound);
-				#endif // AUDIO
+					#ifdef AUDIO
+					if (!mute)
+					{
+						PlaySound(shootSound);
+					}
+					#endif // AUDIO
 				}
 				//Shoot life timer
 				for (int i = 0; i < PLAYER_MAX_SHOOTS; i++)
@@ -387,7 +397,10 @@ namespace Game {
 					if (CheckCollisionCircles({ player.collider.x , player.collider.y }, player.collider.z, bigMeteor[m].position, bigMeteor[m].radius) && bigMeteor[m].active)
 					{
 						#ifdef AUDIO
+						if (!mute)
+						{
 							PlaySound(explosionSound);
+						}
 						#endif // AUDIO
 						gameover = true;
 					}
@@ -397,7 +410,10 @@ namespace Game {
 					if (CheckCollisionCircles({ player.collider.x,player.collider.y }, player.collider.z, mediumMeteor[m].position, mediumMeteor[m].radius) && mediumMeteor[m].active)
 					{
 						#ifdef AUDIO
+						if (!mute)
+						{
 							PlaySound(explosionSound);
+						}
 						#endif // AUDIO
 						gameover = true;
 					}
@@ -407,7 +423,10 @@ namespace Game {
 					if (CheckCollisionCircles({ player.collider.x,player.collider.y }, player.collider.z, smallMeteor[m].position, smallMeteor[m].radius) && smallMeteor[m].active)
 					{
 						#ifdef AUDIO
+						if (!mute)
+						{
 							PlaySound(explosionSound);
+						}
 						#endif // AUDIO
 						gameover = true;
 					}
@@ -512,7 +531,10 @@ namespace Game {
 								bigMeteor[a].active = false;
 								destroyedMeteorsCount++;
 								#ifdef AUDIO
+								if (!mute)
+								{
 									PlaySound(explosionSound);
+								}
 								#endif // AUDIO
 								for (int j = 0; j < PAIR_DIVIDER; j++)
 								{
@@ -543,7 +565,10 @@ namespace Game {
 								mediumMeteor[b].active = false;
 								destroyedMeteorsCount++;
 								#ifdef AUDIO
+								if (!mute)
+								{
 									PlaySound(explosionSound);
+								}
 								#endif // AUDIO
 								for (int j = 0; j < PAIR_DIVIDER; j++)
 								{
@@ -574,7 +599,10 @@ namespace Game {
 								smallMeteor[c].active = false;
 								destroyedMeteorsCount++;
 								#ifdef AUDIO
+								if (!mute)
+								{
 									PlaySound(explosionSound);
+								}
 								#endif // AUDIO
 								smallMeteor[c].color = YELLOW;
 								c = MAX_SMALL_METEORS;
@@ -614,6 +642,13 @@ namespace Game {
 					{
 						GamePlay::InitGame();
 						MainMenu::menu = false;
+					}
+				}
+				if (CheckCollisionPointRec(mousePoint, muteButton))
+				{
+					if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON))
+					{
+						mute = !mute;
 					}
 				}
 			}
@@ -703,6 +738,9 @@ namespace Game {
 				
 				DrawRectangle(resetButton.x, resetButton.y, resetButton.width, resetButton.height, LIGHTGRAY);
 				DrawText(FormatText("Restart"), Game::HALF_SCREENWIDTH - (MeasureText("Restart", FONT_SIZE_OPTIONS) / DIVIDER_MEASURE_TEXT * MULTIPLIER_BUTTON_WIDTH) + HORIZONTAL_MARGIN, Game::SCREENHEIGHT / PAUSE_PANEL_DIVIDER_Y +FONT_SIZE_OPTIONS*2+ VERTICAL_MARGIN, FONT_SIZE_OPTIONS, RAYWHITE);
+
+				DrawRectangle(muteButton.x, muteButton.y, muteButton.width, muteButton.height, LIGHTGRAY);
+				DrawText(FormatText("Mute ON/OFF"), Game::HALF_SCREENWIDTH - (MeasureText("Mute ON/OFF", FONT_SIZE_OPTIONS) / DIVIDER_MEASURE_TEXT * MULTIPLIER_BUTTON_WIDTH) + HORIZONTAL_MARGIN, Game::SCREENHEIGHT / PAUSE_PANEL_DIVIDER_Y + FONT_SIZE_OPTIONS * 3 + VERTICAL_MARGIN, FONT_SIZE_OPTIONS, RAYWHITE);
 			}
 		}
 	}
