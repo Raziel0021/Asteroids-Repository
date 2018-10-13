@@ -61,14 +61,14 @@ namespace Game
 			
 			GamePlay::rocket = LoadTexture("res/CohetePequeño.png");
 			GamePlay::asteroid = LoadTexture("res/AsteroidePequeño.png");
-			//#define AUDIO
+			#define AUDIO
 
 			#ifdef AUDIO	
 				InitAudioDevice();
-				ping = LoadSound("res/");
-				pong = LoadSound("res/");
-				music = LoadMusicStream("res/");
-				PlayMusicStream(music);
+				GamePlay::shootSound = LoadSound("res/Shoot.wav");
+				GamePlay::explosionSound = LoadSound("res/Explosion.wav");
+				GamePlay::music = LoadMusicStream("res/BackgroundMusic.ogg");
+				PlayMusicStream(GamePlay::music);
 			#endif // AUDIO
 		}
 		void UnloadGame()
@@ -77,10 +77,13 @@ namespace Game
 			UnloadTexture (GamePlay::rocket);
 			UnloadTexture(GamePlay::asteroid);
 			#ifdef AUDIO
+				UnloadSound(GamePlay::shootSound);
+				UnloadSound(GamePlay::explosionSound);
+				UnloadMusicStream(GamePlay::music);
 				CloseAudioDevice();
 			#endif // AUDIO
 			close = true;
-			//CloseWindow();
+			
 		}
 	}
 }

@@ -62,7 +62,10 @@ namespace Game {
 
 		Texture2D rocket;
 		Texture2D asteroid;
-
+		Sound shootSound;
+		Sound explosionSound;
+		Music music;
+		static bool mute;
 		int midMeteorsCount;
 		int smallMeteorsCount;
 		int destroyedMeteorsCount;
@@ -264,9 +267,9 @@ namespace Game {
 
 		void Play() 
 		{
-			//#define AUDIO
+			#define AUDIO
 			#ifdef AUDIO
-				UpdateAudioStream(music);
+				UpdateMusicStream(music);
 			#endif // AUDIO
 			
 			mousePoint = GetMousePosition();
@@ -326,6 +329,9 @@ namespace Game {
 							break;
 						}
 					}
+				#ifdef AUDIO
+					PlaySound(shootSound);
+				#endif // AUDIO
 				}
 				//Shoot life timer
 				for (int i = 0; i < PLAYER_MAX_SHOOTS; i++)
@@ -380,6 +386,9 @@ namespace Game {
 				{
 					if (CheckCollisionCircles({ player.collider.x , player.collider.y }, player.collider.z, bigMeteor[m].position, bigMeteor[m].radius) && bigMeteor[m].active)
 					{
+						#ifdef AUDIO
+							PlaySound(explosionSound);
+						#endif // AUDIO
 						gameover = true;
 					}
 				}
@@ -387,6 +396,9 @@ namespace Game {
 				{
 					if (CheckCollisionCircles({ player.collider.x,player.collider.y }, player.collider.z, mediumMeteor[m].position, mediumMeteor[m].radius) && mediumMeteor[m].active)
 					{
+						#ifdef AUDIO
+							PlaySound(explosionSound);
+						#endif // AUDIO
 						gameover = true;
 					}
 				}
@@ -394,6 +406,9 @@ namespace Game {
 				{
 					if (CheckCollisionCircles({ player.collider.x,player.collider.y }, player.collider.z, smallMeteor[m].position, smallMeteor[m].radius) && smallMeteor[m].active)
 					{
+						#ifdef AUDIO
+							PlaySound(explosionSound);
+						#endif // AUDIO
 						gameover = true;
 					}
 				}
@@ -496,7 +511,9 @@ namespace Game {
 								shoot[i].lifeSpawn = INIT_LIFE_SPAWN;
 								bigMeteor[a].active = false;
 								destroyedMeteorsCount++;
-
+								#ifdef AUDIO
+									PlaySound(explosionSound);
+								#endif // AUDIO
 								for (int j = 0; j < PAIR_DIVIDER; j++)
 								{
 									if (midMeteorsCount % PAIR_DIVIDER == INIT_COUNT)
@@ -525,7 +542,9 @@ namespace Game {
 								shoot[i].lifeSpawn = INIT_LIFE_SPAWN;
 								mediumMeteor[b].active = false;
 								destroyedMeteorsCount++;
-
+								#ifdef AUDIO
+									PlaySound(explosionSound);
+								#endif // AUDIO
 								for (int j = 0; j < PAIR_DIVIDER; j++)
 								{
 									if (smallMeteorsCount % PAIR_DIVIDER == 0)
@@ -554,6 +573,9 @@ namespace Game {
 								shoot[i].lifeSpawn = INIT_LIFE_SPAWN;
 								smallMeteor[c].active = false;
 								destroyedMeteorsCount++;
+								#ifdef AUDIO
+									PlaySound(explosionSound);
+								#endif // AUDIO
 								smallMeteor[c].color = YELLOW;
 								c = MAX_SMALL_METEORS;
 							}
