@@ -54,7 +54,7 @@ namespace Game {
 			DrawRectangle(backButton.x, backButton.y, backButton.width, backButton.height, LIGHTGRAY);
 			DrawText(FormatText("Back"), Game::HALF_SCREENWIDTH - (MeasureText("Back", FONT_SIZE) / DIVIDER_MEASURE_TEXT), Game::SCREENHEIGHT / HELPER_LINE_DIVIDER + FONT_SIZE, FONT_SIZE, DARKGRAY);
 			
-			DrawText(FormatText("Version 0.4"), Game::HALF_SCREENWIDTH - (MeasureText("Version 0.4", FONT_SIZE_HELPER) / DIVIDER_MEASURE_TEXT), Game::SCREENHEIGHT / VERSION_LINE_DIVIDER + FONT_SIZE, FONT_SIZE_HELPER, DARKGRAY);
+			DrawText(FormatText("Version 1.0"), Game::HALF_SCREENWIDTH - (MeasureText("Version 1.0", FONT_SIZE_HELPER) / DIVIDER_MEASURE_TEXT), Game::SCREENHEIGHT / VERSION_LINE_DIVIDER + FONT_SIZE, FONT_SIZE_HELPER, DARKGRAY);
 			
 		}
 		void updateCredits()
