@@ -1,3 +1,6 @@
+<img align="left" src="https://github.com/Raziel0021/Asteroids-Repository/blob/master/Logo/Logo.png" width=256>
+
+
 # Asteroids
 
 Esta versión de Asteroids ha sido creado con motivos educacionales, el juego en si, para 
