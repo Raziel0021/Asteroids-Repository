@@ -656,12 +656,7 @@ namespace Game {
 		
 		void DrawGame()
 		{
-			//SpaceShip Reference
-			/*Vector2 v1 = { player.position.x + sinf(player.rotation*DEG2RAD)*shipHeight,player.position.y - cosf(player.rotation*DEG2RAD)*shipHeight };
-			Vector2 v2 = { player.position.x - cosf(player.rotation*DEG2RAD)*(HALF_PLAYER_BASE_SIZE),player.position.y - sinf(player.rotation*DEG2RAD)*(HALF_PLAYER_BASE_SIZE) };
-			Vector2 v3 = { player.position.x + cosf(player.rotation*DEG2RAD)*(HALF_PLAYER_BASE_SIZE),player.position.y + sinf(player.rotation*DEG2RAD)*(HALF_PLAYER_BASE_SIZE) };
-			DrawTriangle(v1, v2, v3, RED);*/
-
+			//SpaceShip
 			RocketSourceRect = { INIT_POSITION.x, INIT_POSITION.y, (float)rocket.width, (float)rocket.height };
 			RocketDestRect = { player.position.x ,player.position.y,(float)rocket.width/ROCKET_SCALE_DIVIDER,(float)rocket.height/ROCKET_SCALE_DIVIDER };
 			RocketOrigin = { (float)rocket.width/ROCKET_ORIGIN_SCALE_DIVIDER ,(float)rocket.height/ROCKET_ORIGIN_SCALE_DIVIDER };
@@ -679,36 +674,27 @@ namespace Game {
 					AsteroidOrigin = { (float)asteroid.width / BIG_METEOR_ORIGIN_SCALE_DIVIDER ,(float)asteroid.height / BIG_METEOR_ORIGIN_SCALE_DIVIDER };
 					DrawTexturePro(asteroid, AsteroidSourceRect, AsteroidDestRect, AsteroidOrigin, 0, WHITE);
 				}
-				/*else
-					DrawCircleV(bigMeteor[i].position, bigMeteor[i].radius, Fade(BLANK, ALPHA_DEACTIVATE_METEOR));*/
+				
 			}
 			for (int i = 0; i < MAX_MEDIUM_METEORS; i++)
 			{
 				if (mediumMeteor[i].active)
-				{
-					//DrawCircleV(mediumMeteor[i].position, mediumMeteor[i].radius, WHITE);
-					
+				{		
 					AsteroidSourceRect = { INIT_POSITION.x, INIT_POSITION.y, (float)asteroid.width, (float)asteroid.height };
 					AsteroidDestRect = { mediumMeteor[i].position.x ,mediumMeteor[i].position.y,(float)asteroid.width / MEDIUM_METEOR_SCALE_DIVIDER,(float)asteroid.height / MEDIUM_METEOR_SCALE_DIVIDER };
 					AsteroidOrigin = { (float)asteroid.width / MEDIUM_METEOR_ORIGIN_SCALE_DIVIDER ,(float)asteroid.height / MEDIUM_METEOR_ORIGIN_SCALE_DIVIDER };
 					DrawTexturePro(asteroid, AsteroidSourceRect, AsteroidDestRect, AsteroidOrigin, 0, WHITE);
 				}
-				/*else
-					DrawCircleV(mediumMeteor[i].position, mediumMeteor[i].radius, Fade(BLANK, ALPHA_DEACTIVATE_METEOR));*/
 			}
 			for (int i = 0; i < MAX_SMALL_METEORS; i++)
 			{
 				if (smallMeteor[i].active)
 				{
-					/*DrawCircleV(smallMeteor[i].position, smallMeteor[i].radius, WHITE);*/
-					
 					AsteroidSourceRect = { INIT_POSITION.x, INIT_POSITION.y, (float)asteroid.width, (float)asteroid.height };
 					AsteroidDestRect = { smallMeteor[i].position.x ,smallMeteor[i].position.y,(float)asteroid.width / SMALL_METEOR_SCALE_DIVIDER,(float)asteroid.height / SMALL_METEOR_SCALE_DIVIDER };
 					AsteroidOrigin = { (float)asteroid.width / SMALL_METEOR_ORIGIN_SCALE_DIVIDER ,(float)asteroid.height / SMALL_METEOR_ORIGIN_SCALE_DIVIDER };
 					DrawTexturePro(asteroid, AsteroidSourceRect, AsteroidDestRect, AsteroidOrigin, 0, WHITE);
 				}
-				/*else
-					DrawCircleV(smallMeteor[i].position, smallMeteor[i].radius, Fade(BLANK, ALPHA_DEACTIVATE_METEOR));*/
 			}
 
 			//Shoot
